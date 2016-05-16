@@ -1,0 +1,13 @@
+\documentclass{article}
+\usepackage{amsmath,amsfonts,amssymb,graphicx,color,float}
+\begin{document}
+\section*{Appendix}
+\bigskip
+\subsection*{Standard filtering}
+The standard initial filtering steps normally taken within the X-12-ARIMA package are threefold. In the first stepa provisional trend is identified by taking a moving average with the unifrom weights and end-point correction, i.e. if the trend and cycle are indicated by textit{c$_i$} then:
+\begin{equation*}
+c_i=\frac{1}{24}y_{i-6}+\frac{1}{12}y_{i-5}+...+\frac{1}{12}y_{i+5}+\frac{1}{24}y_{i+6}
+\end{equation*}
+In some literature this is referred to as $M_{2\times12}$ filter. This provisional trend is then subtracted from the time series to produce a provisional |textit{seasonal+irregular} component. At this stage the time series can be investigated for outliers which can be downweighted in a variety of ways. The next step is for each calendar month to calculate a moving average using the same month in several successive years. Often most weight is given to that month in the ``central'' year and symmetrically decreasing the weights for earlier or last years. Other options are available however.\\An updated \textit{trend+cycle+noise} series \textit{c} can now be computed, by subtracting the seasonal component that has just been determined from the original time series. This can be improved upon by once again applying a moving average filter, but rather a uniform moving average a Henderson filter is applied which tapers more smoothly over the time series. In this qay an updated \textit{trend+cycle+noise} is obtained which is the starting point for also obtaining an updated seasonal component. In principle one can iterate this process further.\\The combination of these individual filtering steps can also be expressed in terms of a single set of filtering weights since each individual step is simply a linear combination of the data with known weights. The combined steps described above tend to lead to a set of weights which is non-zero over a considerable range of months: [-84, 84]
+ although the magnitude of these weights is generally only appreciable for the range [-40, 40]. A recent detailed discussion of properties of the various linear filters can be found in eg. Bell (2012) and in Shumway \& Stoffer (2011).\\The implication of this is that for at least 40 months after any given reporting month the seasonal adjusted time series cannot be considered final, or even for 84 months if the full formal range of non-zero weights is taken into consideration. Further autoregressive modelling, if applied, will exacerbate this problem
+ \end{document}
