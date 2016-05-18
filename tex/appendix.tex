@@ -9,5 +9,52 @@ The standard initial filtering steps normally taken within the X-12-ARIMA packag
 c_i=\frac{1}{24}y_{i-6}+\frac{1}{12}y_{i-5}+...+\frac{1}{12}y_{i+5}+\frac{1}{24}y_{i+6}
 \end{equation*}
 In some literature this is referred to as $M_{2\times12}$ filter. This provisional trend is then subtracted from the time series to produce a provisional |textit{seasonal+irregular} component. At this stage the time series can be investigated for outliers which can be downweighted in a variety of ways. The next step is for each calendar month to calculate a moving average using the same month in several successive years. Often most weight is given to that month in the ``central'' year and symmetrically decreasing the weights for earlier or last years. Other options are available however.\\An updated \textit{trend+cycle+noise} series \textit{c} can now be computed, by subtracting the seasonal component that has just been determined from the original time series. This can be improved upon by once again applying a moving average filter, but rather a uniform moving average a Henderson filter is applied which tapers more smoothly over the time series. In this qay an updated \textit{trend+cycle+noise} is obtained which is the starting point for also obtaining an updated seasonal component. In principle one can iterate this process further.\\The combination of these individual filtering steps can also be expressed in terms of a single set of filtering weights since each individual step is simply a linear combination of the data with known weights. The combined steps described above tend to lead to a set of weights which is non-zero over a considerable range of months: [-84, 84]
- although the magnitude of these weights is generally only appreciable for the range [-40, 40]. A recent detailed discussion of properties of the various linear filters can be found in eg. Bell (2012) and in Shumway \& Stoffer (2011).\\The implication of this is that for at least 40 months after any given reporting month the seasonal adjusted time series cannot be considered final, or even for 84 months if the full formal range of non-zero weights is taken into consideration. Further autoregressive modelling, if applied, will exacerbate this problem
+ although the magnitude of these weights is generally only appreciable for the range [-40, 40]. A recent detailed discussion of properties of the various linear filters can be found in eg. Bell (2012) and in Shumway \& Stoffer (2011).\\The implication of this is that for at least 40 months after any given reporting month the seasonal adjusted time series cannot be considered final, or even for 84 months if the full formal range of non-zero weights is taken into consideration. Further autoregressive modelling, if applied, will exacerbate this problem.\\
+
+\subsection*{Wiener-Kolmogorv filter}
+ The aim is to extract an estimate of a signal sequence $s(t)$ from an observable time series:
+ \begin{equation*}
+ y(t)=s(t)+\eta(t)
+ \end{equation*}
+ where $\eta(t)$ is called noise. TRAMO/SEATS decomposition procedure works by means of the following algorithm.\\
+An ARIMA model is fitted for the signal:
+\begin{equation*}
+\phi_{s}(B)=\theta_{s}(B)a_{st} \quad \mbox{~where~} \quad a_{st} \sim w.n.(0,V_{s})
+\end{equation*}
+where the model for the time series is:
+\begin{equation*}
+\phi(B)y_{t}=\theta(B)a_{t} \quad \mbox{~where~} \quad a_{st}\sim w.n.(0,V_{a})
+\end{equation*}
+(Notice: $\phi(B)=\phi_{s}(B)\phi_{\eta}(B)$.)\\
+\bigskip
+\\
+Write:
+\begin{equation*}
+s_{t}=\Psi_{s}(B)a_{st}; \quad \Psi_{s}(B)=\frac{\theta_{s}(B)}{\psi_{s}(B)} ;
+\end{equation*}
+\begin{equation*}
+y_{t}=\Psi(B)a_{t}; \quad \Psi(B)=\frac{\theta(B)}{\psi(B)} ;
+\end{equation*}
+The SEATS estimation of the signal $s$ at time $t$ then is:
+\begin{equation*}
+\hat{s_{t}}=\left ( \frac {V_{s}\Psi_{s}(B)\Psi_{s}(F)}{V_{a}\Psi(B)\Psi(F)} y_{t}\right )=v(B,F)y_{t}=\left ( v_{0}+\sum\limits_{j=0}^\infty  v_{j} (B^{j}+F^{j}) \right) y_{t}
+\end{equation*}
+Where F is the forward operator; $F=B^{-1}$; $F^{j}y_{t}=y_{t+j}$, and $v(B,F)$ is the so-called Wiener-Kolmogorov filter (WK).\\\textbf{Note}: if time series is stationaty, WK filter is equal to:
+\begin{equation*}
+v(B,F)=\frac{ACGF(s_{t})}{ACGF(y_{t})}
+\end{equation*}
+Wiener-Kolmogorov filters theory is based on the MMSE (Minimun Mean Square Error) idea. The filters derives from the observed model, which in turn depends on the time series. So, those filters differ depending on the observed series. WK filters are symmetric and bi-infinite; it means that for the ends of the series there is the need of forecasts and backcasts in order to get the estimations of those time points as well. This is performed by the TRAMO phase of seasonal adjustment, which provides an extended ARIMA model fitted to the data. Then, SEATS applies the WIK filters.  In this way, at the end of the time series the estimator is preliminary and is subject to revisions every time a new observation enters the time series.\\ Since the filters are centered, they are also convergent. It enables to approximate an infinite number of realization by a finite number of terms.\\With this procedure, highest weights are applied for central observations, even if the weighting pattern depends on the component to estimate. For the seasonal componet, for example, greatest weights are applied to the current value and the past and future values from the same period.
+\subsection*{Square Gain of a filter}
+It the context of filtering a series, it is possible to relate the spectral densities of the input $h_{y}(\omega)$ and of the output $h_{g}(\omega)$ as follows:
+\begin{equation*}
+h_{g}(\omega)=\Gamma(\omega) h_{y}(\omega)
+\end{equation*}
+where $\Gamma(\omega)$ represents the transfer function, in this case the Fourier Transform described in section 2. The absolute value of the transfer function is the gain of the filter:
+\begin{equation*}
+G(\omega)=|\Gamma(\omega)|
+\end{equation*} 
+and its power is the squared gain of the filter, which determines how the variance of the input contributes to the variance of the output at different frequencies.
+
+
+
  \end{document}
