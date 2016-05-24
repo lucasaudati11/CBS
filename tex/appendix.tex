@@ -9,8 +9,7 @@ The standard initial filtering steps normally taken within the X-12-ARIMA packag
 c_i=\frac{1}{24}y_{i-6}+\frac{1}{12}y_{i-5}+...+\frac{1}{12}y_{i+5}+\frac{1}{24}y_{i+6}
 \end{equation*}
 In some literature this is referred to as $M_{2\times12}$ filter. This provisional trend is then subtracted from the time series to produce a provisional |textit{seasonal+irregular} component. At this stage the time series can be investigated for outliers which can be downweighted in a variety of ways. The next step is for each calendar month to calculate a moving average using the same month in several successive years. Often most weight is given to that month in the ``central'' year and symmetrically decreasing the weights for earlier or last years. Other options are available however.\\An updated \textit{trend+cycle+noise} series \textit{c} can now be computed, by subtracting the seasonal component that has just been determined from the original time series. This can be improved upon by once again applying a moving average filter, but rather a uniform moving average a Henderson filter is applied which tapers more smoothly over the time series. In this qay an updated \textit{trend+cycle+noise} is obtained which is the starting point for also obtaining an updated seasonal component. In principle one can iterate this process further.\\The combination of these individual filtering steps can also be expressed in terms of a single set of filtering weights since each individual step is simply a linear combination of the data with known weights. The combined steps described above tend to lead to a set of weights which is non-zero over a considerable range of months: [-84, 84]
- although the magnitude of these weights is generally only appreciable for the range [-40, 40]. A recent detailed discussion of properties of the various linear filters can be found in eg. Bell (2012) and in Shumway \& Stoffer (2011).\\The implication of this is that for at least 40 months after any given reporting month the seasonal adjusted time series cannot be considered final, or even for 84 months if the full formal range of non-zero weights is taken into consideration. Further autoregressive modelling, if applied, will exacerbate this problem.\\
-
+ although the magnitude of these weights is generally only appreciable for the range [-40, 40]. A recent detailed discussion of properties of the various linear filters can be found in eg. Bell (2012) and in Shumway \& Stoffer (2011).\\The implication of this is that for at least 40 months after any given reporting month the seasonal adjusted time series cannot be considered final, or even for 84 months if the full formal range of non-zero weights is taken into consideration. Further autoregressive modelling, if applied, will exacerbate this problem.
 \subsection*{Wiener-Kolmogorv filter}
  The aim is to extract an estimate of a signal sequence $s(t)$ from an observable time series:
  \begin{equation*}
@@ -19,7 +18,7 @@ In some literature this is referred to as $M_{2\times12}$ filter. This provision
  where $\eta(t)$ is called noise. TRAMO/SEATS decomposition procedure works by means of the following algorithm.\\
 An ARIMA model is fitted for the signal:
 \begin{equation*}
-\phi_{s}(B)=\theta_{s}(B)a_{st} \quad \mbox{~where~} \quad a_{st} \sim w.n.(0,V_{s})
+\phi_{s}(B)s_{t}=\theta_{s}(B)a_{st} \quad \mbox{~where~} \quad a_{st} \sim w.n.(0,V_{s})
 \end{equation*}
 where the model for the time series is:
 \begin{equation*}
@@ -47,11 +46,11 @@ Wiener-Kolmogorov filters theory is based on the MMSE (Minimun Mean Square Error
 \subsection*{Square Gain of a filter}
 It the context of filtering a series, it is possible to relate the spectral densities of the input $h_{y}(\omega)$ and of the output $h_{g}(\omega)$ as follows:
 \begin{equation*}
-h_{g}(\omega)=\Gamma(\omega) h_{y}(\omega)
+h_{g}(\omega)=Y(\omega) h_{y}(\omega)
 \end{equation*}
-where $\Gamma(\omega)$ represents the transfer function, in this case the Fourier Transform described in section 2. The absolute value of the transfer function is the gain of the filter:
+where $Y(\omega)$ represents the transfer function, in this case the Fourier Transform described in section 2. The absolute value of the transfer function is the gain of the filter:
 \begin{equation*}
-G(\omega)=|\Gamma(\omega)|
+G(\omega)=|Y(\omega)|
 \end{equation*} 
 and its power is the squared gain of the filter, which determines how the variance of the input contributes to the variance of the output at different frequencies.
 
